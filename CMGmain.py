@@ -213,6 +213,26 @@ def create_streamlit_app(llm, clean_text):
 
 
 if __name__ == "__main__":
-    chain = Chain()
     st.set_page_config(layout="wide", page_title="Cold Email Generator", page_icon="📧")
-    create_streamlit_app(chain, clean_text)
+    
+    try:
+        chain = Chain()
+        create_streamlit_app(chain, clean_text)
+    except ValueError as e:
+        st.error("🔑 API Key Configuration Error")
+        st.error(str(e))
+        st.info("""
+        **To fix this error:**
+        1. Go to your Streamlit Cloud app dashboard
+        2. Click on 'Settings' -> 'Secrets'
+        3. Add the following secret:
+        ```
+        GROQ_API_KEY = "your_groq_api_key_here"
+        ```
+        4. Get your free GROQ API key from: https://console.groq.com/
+        """)
+        st.stop()
+    except Exception as e:
+        st.error("🚨 Application Initialization Error")
+        st.error(f"Failed to initialize the application: {str(e)}")
+        st.stop()

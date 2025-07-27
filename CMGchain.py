@@ -10,11 +10,23 @@ load_dotenv()
 
 class Chain:
     def __init__(self):
-        self.llm = ChatGroq(
-            temperature=0,
-            groq_api_key=os.getenv("GROQ_API_KEY"),
-            model_name="llama3-70b-8192"
-        )
+        # Check if GROQ API key is available
+        groq_api_key = os.getenv("GROQ_API_KEY")
+        if not groq_api_key:
+            raise ValueError(
+                "GROQ_API_KEY environment variable is not set. "
+                "Please set your GROQ API key in the Streamlit secrets or environment variables."
+            )
+        
+        try:
+            self.llm = ChatGroq(
+                temperature=0,
+                groq_api_key=groq_api_key,
+                model_name="llama3-70b-8192"
+            )
+        except Exception as e:
+            raise RuntimeError(f"Failed to initialize ChatGroq: {str(e)}")
+            
         # Your portfolio link
         self.portfolio_link = "https://anup2003d.github.io/portfolio-site/"
 
