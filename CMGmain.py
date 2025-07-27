@@ -12,10 +12,14 @@ import os
 base_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(base_dir, "Resource", "my_portfolio.csv")
 
-portfolio = Portfolio(csv_path)
-
-def create_streamlit_app(llm, portfolio, clean_text):
+def create_streamlit_app(llm, clean_text):
     st.title("📧 Cold Mail Generator")
+    
+    # Initialize portfolio inside the function to avoid module-level initialization
+    if 'portfolio' not in st.session_state:
+        st.session_state.portfolio = Portfolio(csv_path)
+    
+    portfolio = st.session_state.portfolio
     
     # URL input section
     url_input = st.text_input("Enter a URL:", value="https://jobs.nike.com/job/R-33460")
@@ -210,6 +214,5 @@ def create_streamlit_app(llm, portfolio, clean_text):
 
 if __name__ == "__main__":
     chain = Chain()
-    portfolio = Portfolio(csv_path)
     st.set_page_config(layout="wide", page_title="Cold Email Generator", page_icon="📧")
-    create_streamlit_app(chain, portfolio, clean_text)
+    create_streamlit_app(chain, clean_text)
