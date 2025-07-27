@@ -7,4 +7,3 @@ pandas
 python-dotenv
 beautifulsoup4
 numpy<2.0.0
-sqlite3>=3.35.0
